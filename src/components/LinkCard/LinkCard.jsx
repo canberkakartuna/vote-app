@@ -9,6 +9,7 @@ import Button from '@material-ui/core/Button';
 import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 import RemoveModal from '../RemoveModal/RemoveModal';
 
+
 const useStyles = makeStyles(() => ({
   root: {
     display: 'flex',
@@ -46,21 +47,38 @@ const useStyles = makeStyles(() => ({
   },
   removeIcon: {
     position: 'absolute',
-    margin: '-10px 0 0 25px',
+    margin: '-10px 0 0 87px',
     color: 'red',
   }
 }));
 
-export default function LinkCard() {
+export default function LinkCard({ id, name, voteCount, url, setLinks }) {
   const classes = useStyles();
   const [hover, setHover] = useState(false);
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [trackVote, setTrackVote] = useState(voteCount)
+
+  const handleVote = (vote) => {
+    var links = JSON.parse(localStorage.getItem('links'));
+
+    var foundIndex = links.findIndex(link => link.id === id);
+    
+    links[foundIndex].voteCount += vote;
+
+    console.log(links[foundIndex], links[foundIndex].voteCount);
+
+    setTrackVote(trackVote + vote);
+
+    console.log(links);
+
+    localStorage.setItem('links', JSON.stringify(links));
+  }
 
   return (
     <Card className={classes.root} style={hover ? {backgroundColor: '#efefef'} : {}} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
       <div className={classes.cover}>
         <Typography className={classes.voteCount}>
-          4
+          {trackVote}
         </Typography>
         <Typography>
           POINTS
@@ -69,28 +87,28 @@ export default function LinkCard() {
       <div className={classes.details}>
         <CardContent className={classes.content}>
           <Typography component="h5" variant="h5" style={{fontWeight: 'bold'}}>
-            Hacker News
+            {name}
           </Typography>
           <Typography variant="subtitle1" color="textSecondary">
             (
-              <a className={classes.link} href="https://news.ycombinator.com/" target="_blank">
-                https://news.ycombinator.com/
+              <a className={classes.link} href={'https://' + url} target="_blank" rel="noreferrer">
+                {url}
               </a>
             )
           </Typography>
         </CardContent>
         <div>
-          <Button style={{textTransform: 'capitalize', color: 'gray'}}>
+          <Button onClick={(e) => handleVote(1)} style={{textTransform: 'capitalize', color: 'gray'}}>
             <ArrowUpwardIcon />
             Up Vote
           </Button>
-          <Button style={{textTransform: 'capitalize', color: 'gray'}}>
+          <Button onClick={(e) => handleVote(-1)} style={{textTransform: 'capitalize', color: 'gray'}}>
             <ArrowDownwardIcon />
             Down Vote
           </Button>
         </div>
       </div>
-      <RemoveModal setOpen={setOpen} open={open} setHover={setHover}>
+      <RemoveModal id={id} setOpen={setOpen} open={open} setHover={setHover} setLinks={setLinks}>
         <RemoveCircleIcon onClick={() => setOpen(true)} className={classes.removeIcon} style={hover ? {display: 'block', cursor: 'pointer'} : {visibility: 'hidden'}} />
       </RemoveModal>
     </Card>

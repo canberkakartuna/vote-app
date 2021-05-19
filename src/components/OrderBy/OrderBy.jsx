@@ -2,8 +2,7 @@ import React from 'react';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import InputBase from '@material-ui/core/InputBase';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import { withStyles } from '@material-ui/core/styles';
 
 
 const SelectInput = withStyles((theme) => ({
@@ -43,7 +42,6 @@ const SelectInput = withStyles((theme) => ({
 
 
 export default function OrderBy() {
-  const [open, setOpen] = React.useState(false);
   const [state, setState] = React.useState({
     age: '',
     name: 'hai',
@@ -63,7 +61,6 @@ export default function OrderBy() {
         <Select
           native
           value={state.age}
-          open={open}
           onChange={handleChange}
           input={<SelectInput />}
         >

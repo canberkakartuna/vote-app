@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import TextField from '@material-ui/core/TextField';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Button from '@material-ui/core/Button';
@@ -45,6 +45,30 @@ const useStyles = makeStyles(() => ({
 
 const NewLinkPage = () => {
   const classes = useStyles();
+  const [name, setName] = useState();
+  const [url, setUrl] = useState();
+
+  const handleAdd = () => {
+    const oldLinks = JSON.parse(localStorage.getItem('links'))
+    if(oldLinks){
+      localStorage.setItem('links', JSON.stringify([...oldLinks, {
+        id: oldLinks.length + 1,
+        name,
+        url,
+        voteCount:0,
+        voteTime: Date.now()
+      }]))
+    } else {
+      localStorage.setItem('links', JSON.stringify([{
+        id: 1,
+        name,
+        url,
+        voteCount: 0,
+        voteTime: Date.now()
+      }]))
+    }
+  }
+
 
   return(
     <div>
@@ -62,14 +86,14 @@ const NewLinkPage = () => {
         </Typography>
         <div className={classes.row}>
           <Typography>Link Name:</Typography>
-          <TextField variant="outlined" margin="dense" fullWidth placeholder="e.g. Alphabet"/>
+          <TextField onChange={(e) => setName(e.target.value)} variant="outlined" margin="dense" fullWidth placeholder="e.g. Alphabet"/>
         </div>
         <div className={classes.row}>
           <Typography>Link URL:</Typography>
-          <TextField variant="outlined" margin="dense" fullWidth placeholder="e.g. http://abc.xyz"/>
+          <TextField onChange={(e) => setUrl(e.target.value)} variant="outlined" margin="dense" fullWidth placeholder="e.g. http://abc.xyz"/>
         </div>
         <div>
-          <Button className={classes.addButton}>ADD</Button> 
+          <Button className={classes.addButton} onClick={handleAdd}>ADD</Button> 
         </div>
       </div>
     </div>
