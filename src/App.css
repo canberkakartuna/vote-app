@@ -1,0 +1,8 @@
+.MuiPaginationItem-page.Mui-selected{
+    background-color: white !important;
+    border: 0.5px solid black;
+}
+
+b {
+    font-size: 30px;
+}

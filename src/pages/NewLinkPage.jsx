@@ -99,7 +99,7 @@ const NewLinkPage = () => {
           <Button className={classes.addButton} onClick={handleAdd}>ADD</Button> 
         </div>
       </div>
-      <InfoToast resetStatus={setAddedStatus} snackOpen={addedStatus} snackVertical="top" snackHorizontal="center" message={name + ' added.'} />
+      <InfoToast resetStatus={setAddedStatus} snackOpen={addedStatus} snackVertical="top" snackHorizontal="center" message={`<b>${name}</b> added.`} />
     </div>
   )
 }

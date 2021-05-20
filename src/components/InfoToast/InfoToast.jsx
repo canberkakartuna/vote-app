@@ -31,7 +31,7 @@ export default function InfoToast({
     <div>
       <Snackbar  anchorOrigin={{ vertical, horizontal }} open={open} autoHideDuration={3000} onClose={handleClose}>
         <Typography style={{backgroundColor: '#ccff99', color: '#green', padding: '10px 20px', borderRadius: '2px', fontSize: '25px'}}>
-          {message}
+          <div dangerouslySetInnerHTML={{ __html: message }}></div>
         </Typography>
       </Snackbar>
     </div>

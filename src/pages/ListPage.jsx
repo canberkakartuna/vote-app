@@ -31,6 +31,10 @@ const ListPage = () => {
     setLinks(JSON.parse(localStorage.getItem('links')));
   }, [])
 
+  const indexOfLastLink = page * 5;
+  const indexOfFirstLink = indexOfLastLink - 5;
+  const currentLinks = (links || []).slice(indexOfFirstLink, indexOfLastLink);
+
   return(
     <div className={classes.container}>
       <AddLink/>
@@ -38,7 +42,7 @@ const ListPage = () => {
 
       {(links && links.length !== 0) ? <OrderBy /> : null}
 
-      {(links || []).filter((res) =>((page-1) * 5 < res.id) && res.id < page * 5 + 1).map(({id, ...otherProps}) => {
+      {(currentLinks || []).map(({id, ...otherProps}) => {
         return(
           <div key={id}>
             <LinkCard id={id} {...otherProps} setLinks={setLinks} setDeleteStatus={setDeleteStatus} setDeletedName={setDeletedName} />
@@ -47,7 +51,7 @@ const ListPage = () => {
       })}
 
       {(links && links.length === 0) || (!links) ? (
-          <Typography style={{textAlign: 'center'}}>No Vote</Typography>
+          <Typography style={{textAlign: 'center'}}>No Link</Typography>
         ) : null}
 
       {(links && links.length !== 0) ?  (
@@ -56,7 +60,7 @@ const ListPage = () => {
           onChange={(e, p) => setPage(p)} style={{margin: 'auto'}}
           count={Math.ceil(JSON.parse(localStorage.getItem('links')).length / 5)}
           shape="rounded" />) : null}
-      <InfoToast resetStatus={setDeleteStatus} snackOpen={deleteStatus} snackVertical="top" snackHorizontal="center" message={deletedName + ' removed.'} />
+      <InfoToast resetStatus={setDeleteStatus} snackOpen={deleteStatus} snackVertical="top" snackHorizontal="center" message={`<b>${deletedName}</b> removed.`} />
     </div>
   )
 }
