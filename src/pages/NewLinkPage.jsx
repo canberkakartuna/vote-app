@@ -5,7 +5,8 @@ import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import { Link } from "react-router-dom";
 import { Typography } from '@material-ui/core';
-
+import InfoToast from '../components/InfoToast/InfoToast';
+ 
 const useStyles = makeStyles(() => ({
   flexContainer:{
     minWidth: '400px',
@@ -47,9 +48,10 @@ const NewLinkPage = () => {
   const classes = useStyles();
   const [name, setName] = useState();
   const [url, setUrl] = useState();
+  const [addedStatus, setAddedStatus] = useState();
 
   const handleAdd = () => {
-    const oldLinks = JSON.parse(localStorage.getItem('links'))
+    const oldLinks = JSON.parse(localStorage.getItem('links'));
     if(oldLinks){
       localStorage.setItem('links', JSON.stringify([...oldLinks, {
         id: oldLinks.length + 1,
@@ -67,6 +69,7 @@ const NewLinkPage = () => {
         voteTime: Date.now()
       }]))
     }
+    setAddedStatus(true);
   }
 
 
@@ -74,7 +77,7 @@ const NewLinkPage = () => {
     <div>
       <div className={classes.flexContainer}>
         <div className={classes.flexRow}>
-          <Link to='/'>
+          <Link to='/vote-app'>
             <ArrowBackIcon className={classes.backIcon}/>
           </Link>
           <Typography className={classes.linkLabel}>
@@ -96,6 +99,7 @@ const NewLinkPage = () => {
           <Button className={classes.addButton} onClick={handleAdd}>ADD</Button> 
         </div>
       </div>
+      <InfoToast resetStatus={setAddedStatus} snackOpen={addedStatus} snackVertical="top" snackHorizontal="center" message={name + ' added.'} />
     </div>
   )
 }

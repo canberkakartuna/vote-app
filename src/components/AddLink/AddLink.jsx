@@ -31,7 +31,7 @@ const AddLink = () => {
   return (
     <>
       <div className={classes.container}>
-        <Link to='/add-link' className={classes.submitButton} variant="contained" color="default">
+        <Link to='/vote-app/add-link' className={classes.submitButton} variant="contained" color="default">
           <AddIcon className={classes.addIcon}/>
         </Link>
         <Typography className={classes.submitLabel} variant="h5" component="h4">SUBMIT A LINK</Typography>

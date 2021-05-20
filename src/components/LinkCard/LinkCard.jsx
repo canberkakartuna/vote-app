@@ -9,7 +9,6 @@ import Button from '@material-ui/core/Button';
 import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 import RemoveModal from '../RemoveModal/RemoveModal';
 
-
 const useStyles = makeStyles(() => ({
   root: {
     display: 'flex',
@@ -52,12 +51,13 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-export default function LinkCard({ id, name, voteCount, url, setLinks }) {
+export default function LinkCard({ id, name, voteCount, url, setLinks, setDeleteStatus, setDeletedName }) {
   const classes = useStyles();
   const [hover, setHover] = useState(false);
   const [open, setOpen] = useState(false);
-  const [trackVote, setTrackVote] = useState(voteCount)
+  const [trackVote, setTrackVote] = useState(voteCount);
 
+  
   const handleVote = (vote) => {
     var links = JSON.parse(localStorage.getItem('links'));
 
@@ -68,8 +68,6 @@ export default function LinkCard({ id, name, voteCount, url, setLinks }) {
     console.log(links[foundIndex], links[foundIndex].voteCount);
 
     setTrackVote(trackVote + vote);
-
-    console.log(links);
 
     localStorage.setItem('links', JSON.stringify(links));
   }
@@ -108,7 +106,7 @@ export default function LinkCard({ id, name, voteCount, url, setLinks }) {
           </Button>
         </div>
       </div>
-      <RemoveModal id={id} setOpen={setOpen} open={open} setHover={setHover} setLinks={setLinks}>
+      <RemoveModal id={id} setOpen={setOpen} open={open} setHover={setHover} setLinks={setLinks} setDeleteStatus={setDeleteStatus} name={name} setDeletedName={setDeletedName}>
         <RemoveCircleIcon onClick={() => setOpen(true)} className={classes.removeIcon} style={hover ? {display: 'block', cursor: 'pointer'} : {visibility: 'hidden'}} />
       </RemoveModal>
     </Card>

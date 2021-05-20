@@ -6,6 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import LinkCard from '../components/LinkCard/LinkCard';
 import Pagination from '@material-ui/lab/Pagination';
 import { Typography } from '@material-ui/core';
+import InfoToast from '../components/InfoToast/InfoToast';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -22,8 +23,9 @@ const ListPage = () => {
   const classes = useStyles();
 
   const [page, setPage] = useState(1);
-
+  const [deleteStatus, setDeleteStatus] = useState(false);
   const [links, setLinks] = useState();
+  const [deletedName, setDeletedName] = useState();
 
   useEffect(() => {
     setLinks(JSON.parse(localStorage.getItem('links')));
@@ -34,30 +36,27 @@ const ListPage = () => {
       <AddLink/>
       <Divider style={{margin: '20px 0'}}/>
 
-      {
-        (links && links.length !== 0) ? <OrderBy /> : null
-      }
+      {(links && links.length !== 0) ? <OrderBy /> : null}
 
-      {
-      (links || []).filter((res) =>((page-1) * 5 < res.id) && res.id < page * 5 + 1).map(({id, ...otherProps}) => {
+      {(links || []).filter((res) =>((page-1) * 5 < res.id) && res.id < page * 5 + 1).map(({id, ...otherProps}) => {
         return(
           <div key={id}>
-            <LinkCard id={id} {...otherProps} setLinks={setLinks} />
+            <LinkCard id={id} {...otherProps} setLinks={setLinks} setDeleteStatus={setDeleteStatus} setDeletedName={setDeletedName} />
           </div>
         )
-      }) 
-      }
+      })}
 
-      {
-         (links && links.length === 0) ? (
-           <Typography style={{textAlign: 'center'}}>No Vote</Typography>
-         ) : null
-      }
+      {(links && links.length === 0) || (!links) ? (
+          <Typography style={{textAlign: 'center'}}>No Vote</Typography>
+        ) : null}
 
-      {
-        (links && links.length !== 0) ?  <Pagination page={page} onChange={(e, p) => setPage(p)} style={{margin: 'auto'}} count={Math.ceil(JSON.parse(localStorage.getItem('links')).length / 5)} shape="rounded" />: null
-      }
-     
+      {(links && links.length !== 0) ?  (
+        <Pagination 
+          page={page}
+          onChange={(e, p) => setPage(p)} style={{margin: 'auto'}}
+          count={Math.ceil(JSON.parse(localStorage.getItem('links')).length / 5)}
+          shape="rounded" />) : null}
+      <InfoToast resetStatus={setDeleteStatus} snackOpen={deleteStatus} snackVertical="top" snackHorizontal="center" message={deletedName + ' removed.'} />
     </div>
   )
 }

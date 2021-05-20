@@ -1,39 +1,39 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import Snackbar from '@material-ui/core/Snackbar';
+import { Typography } from '@material-ui/core';
 
-export default function InfoToast({ children, toastStatus }) {
-  const [state, setState] = useState({
+
+export default function InfoToast({
+  snackOpen, snackVertical, snackHorizontal, message, resetStatus
+}) {
+  const [state, setState] = React.useState({
     open: false,
     vertical: 'top',
     horizontal: 'center',
   });
 
-  const { vertical, horizontal, open } = state;
-
   useEffect(() => {
-    setState({ open: true, ...toastStatus });
+    setState({
+      open: snackOpen,
+      vertical: snackVertical,
+      horizontal: snackHorizontal,
+    });
+  }, [snackOpen, snackVertical, snackHorizontal]);
 
-    console.log('worked! ', toastStatus);
-  }, [toastStatus])
-
-
+  const { vertical, horizontal, open } = state;
 
   const handleClose = () => {
     setState({ ...state, open: false });
+    resetStatus(false);
   };
 
-
   return (
-  <div>
-    {children}
-    {/* <Button onClick={handleClick({ vertical: 'top', horizontal: 'center' })}>Top-Center</Button> */}
-    <Snackbar
-      anchorOrigin={{ vertical, horizontal }}
-      open={open}
-      onClose={handleClose}
-      message="I love snacks"
-      key={vertical + horizontal}
-    />
-  </div>
+    <div>
+      <Snackbar  anchorOrigin={{ vertical, horizontal }} open={open} autoHideDuration={3000} onClose={handleClose}>
+        <Typography style={{backgroundColor: '#ccff99', color: '#green', padding: '10px 20px', borderRadius: '2px', fontSize: '25px'}}>
+          {message}
+        </Typography>
+      </Snackbar>
+    </div>
   );
 }

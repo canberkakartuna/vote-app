@@ -31,14 +31,14 @@ function App() {
           <Divider />
         </div>
         <Switch>
-          <Route exact path="/">
+          <Route exact path="/vote-app">
             <ListPage/>
           </Route>
-          <Route exact path="/add-link">
+          <Route exact path="/vote-app/add-link">
             <NewLinkPage/>
           </Route>
           <Route path="*">
-            <Redirect to="/"/>
+            <Redirect to="/vote-app"/>
           </Route>
           </Switch>
       </Container>

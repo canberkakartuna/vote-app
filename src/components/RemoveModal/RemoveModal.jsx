@@ -8,7 +8,8 @@ import CloseIcon from '@material-ui/icons/Close';
 import { Typography } from '@material-ui/core';
 import { modalStyles } from './RemoveModal.styles';
 
-export default function RemoveModal({ children, setOpen, open, setHover, id, setLinks }) {
+
+export default function RemoveModal({ children, setOpen, open, setHover, id, setLinks, setDeleteStatus, name, setDeletedName }) {
   const classes = modalStyles();
 
   const handleClose = () => {
@@ -24,6 +25,9 @@ export default function RemoveModal({ children, setOpen, open, setHover, id, set
     links.splice(foundIndex, 1);
 
     localStorage.setItem('links', JSON.stringify(links));
+
+    setDeleteStatus(true);
+    setDeletedName(name);
 
     setLinks(links);
     
@@ -55,7 +59,7 @@ export default function RemoveModal({ children, setOpen, open, setHover, id, set
               <Typography>
                 Do you want to remove:
               </Typography>
-              <Typography className={classes.boldText}>Hacker News</Typography>
+              <Typography className={classes.boldText}>{name}</Typography>
               <div className={classes.buttons}>
                 <Button className={classes.modalButton} onClick={handleDelete}>OK</Button>
                 <Button className={classes.modalButton} onClick={handleClose}>CANCEL</Button>
