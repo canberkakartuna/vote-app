@@ -4,6 +4,9 @@ import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
 import NewLinkPage from './pages/NewLinkPage';
 import { Container, Typography } from '@material-ui/core';
+import {
+  withWidth
+} from '@material-ui/core';
 import './App.css';
 import {ReactComponent as ReactLogo} from './logo.svg';
 import {
@@ -11,6 +14,7 @@ import {
   Route,
   Redirect
 } from "react-router-dom";
+import { isWidthUp } from '@material-ui/core/withWidth';
 
 const theme = createMuiTheme({
   typography: {
@@ -23,11 +27,11 @@ const theme = createMuiTheme({
   },
 });
 
-function App() {
+function App({ width }) {
   return (
     <ThemeProvider theme={theme}>
       <Container>
-        <div style={{margin: '25px 25px 10px 25px', display: 'flex'}}>
+        <div style={{margin: isWidthUp('md', width) ? '15px 25px 10px 25px' : '15px 15px 10px 5px', display: isWidthUp('md', width) ? 'flex' : 'block'}}>
           <ReactLogo/>
           <span style={{flexGrow: 1}}></span>
           <Typography><strong>Link</strong>VOTE Challenge</Typography>
@@ -49,4 +53,4 @@ function App() {
   );
 }
 
-export default App;
+export default withWidth()(App);

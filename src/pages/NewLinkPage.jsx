@@ -9,7 +9,8 @@ import InfoToast from '../components/InfoToast/InfoToast';
  
 const useStyles = makeStyles(() => ({
   flexContainer:{
-    minWidth: '400px',
+    minWidth: '320px',
+    maxWidth: '400px',
     position: 'absolute',
     left: '50%',
     transform: 'translate(-50%, 0)'
