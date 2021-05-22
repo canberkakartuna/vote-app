@@ -58,7 +58,7 @@ export default function LinkCard({ id, name, voteCount, url, setLinks, setDelete
   const [trackVote, setTrackVote] = useState(voteCount);
 
   const handleSortVote = (links) => {
-    var sorted = links.sort(function(a, b) {
+    var sorted = (links || []).sort(function(a, b) {
       return b.voteTime - a.voteTime;
     }).sort(function(a, b) {
       return b.voteCount - a.voteCount;
@@ -78,9 +78,9 @@ export default function LinkCard({ id, name, voteCount, url, setLinks, setDelete
 
     setTrackVote(trackVote + vote);
 
-    var sortedLinks = handleSortVote(links)
+    var sortedLinks = handleSortVote(links);
 
-    setLinks(sortedLinks)
+    setLinks(sortedLinks);
 
     localStorage.setItem('links', JSON.stringify(sortedLinks));
   }

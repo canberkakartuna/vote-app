@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import { Typography } from '@material-ui/core';
@@ -49,7 +49,7 @@ export default function OrderBy({ clicked, setClicked, setLinks }) {
     var links = JSON.parse(localStorage.getItem('links'));
 
     if(v === 1) {
-      let sorted = links.sort(function(a, b) {
+      let sorted = (links || []).sort(function(a, b) {
         return b.voteTime - a.voteTime;
       }).sort(function(a, b) {
         return b.voteCount - a.voteCount;
@@ -57,7 +57,7 @@ export default function OrderBy({ clicked, setClicked, setLinks }) {
 
       setLinks(sorted);
     } else if(v === 2) {
-      let sorted = links.sort(function(a, b) {
+      let sorted = (links || []).sort(function(a, b) {
         return b.voteTime - a.voteTime;
       }).sort(function(a, b) {
         return a.voteCount - b.voteCount;

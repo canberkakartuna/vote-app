@@ -43,38 +43,47 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
+function isUrlValid(userInput) {
+  var regexQuery = "^(https?://)?(www\\.)?([-a-z0-9]{1,63}\\.)*?[a-z0-9][-a-z0-9]{0,61}[a-z0-9]\\.[a-z]{2,6}(/[-\\w@\\+\\.~#\\?&/=%]*)?$";
+  var url = new RegExp(regexQuery,"i");
+  return url.test(userInput);
+}
 
 const NewLinkPage = () => {
   const classes = useStyles();
-  const [name, setName] = useState();
-  const [url, setUrl] = useState();
+  const [name, setName] = useState('');
+  const [url, setUrl] = useState('');
   const [addedStatus, setAddedStatus] = useState();
+  const [submited, setSubmited] = useState(false);
 
   const handleAdd = () => {
-    const oldLinks = JSON.parse(localStorage.getItem('links'));
-    if(oldLinks){
-      localStorage.setItem('links', JSON.stringify([{
-        id: oldLinks.length + 1,
-        name,
-        url,
-        voteCount:0,
-        voteTime: Date.now()
-      },...oldLinks]))
-    } else {
-      localStorage.setItem('links', JSON.stringify([{
-        id: 1,
-        name,
-        url,
-        voteCount: 0,
-        voteTime: Date.now()
-      }]))
+    setSubmited(true);
+    if(name !== '' && (url !== '' && isUrlValid(url))) {
+      const oldLinks = JSON.parse(localStorage.getItem('links'));
+      if(oldLinks){
+        localStorage.setItem('links', JSON.stringify([{
+          id: oldLinks.length + 1,
+          name,
+          url,
+          voteCount:0,
+          voteTime: Date.now()
+        },...oldLinks]))
+      } else {
+        localStorage.setItem('links', JSON.stringify([{
+          id: 1,
+          name,
+          url,
+          voteCount: 0,
+          voteTime: Date.now()
+        }]))
+      }
+      setAddedStatus(true);
     }
-    setAddedStatus(true);
   }
 
 
   return(
-    <div>
+    <form>
       <div className={classes.flexContainer}>
         <div className={classes.flexRow}>
           <Link to='/vote-app'>
@@ -89,18 +98,18 @@ const NewLinkPage = () => {
         </Typography>
         <div className={classes.row}>
           <Typography>Link Name:</Typography>
-          <TextField onChange={(e) => setName(e.target.value)} variant="outlined" margin="dense" fullWidth placeholder="e.g. Alphabet"/>
+          <TextField error={!name && submited} helperText={(!name && submited) ?  'Please write link name.' : ''} onChange={(e) => setName(e.target.value)} variant="outlined" margin="dense" fullWidth placeholder="e.g. Alphabet"/>
         </div>
         <div className={classes.row}>
           <Typography>Link URL:</Typography>
-          <TextField onChange={(e) => setUrl(e.target.value)} variant="outlined" margin="dense" fullWidth placeholder="e.g. http://abc.xyz"/>
+          <TextField error={(!url || !isUrlValid(url)) && submited} helperText={((!url || !isUrlValid(url)) && submited) ?  'Please write valid url.' : ''} onChange={(e) => setUrl(e.target.value)} required variant="outlined" margin="dense" fullWidth placeholder="e.g. http://abc.xyz"/>
         </div>
         <div>
-          <Button className={classes.addButton} onClick={handleAdd}>ADD</Button> 
+          <Button data-testid="add-link" className={classes.addButton} onClick={handleAdd}>ADD</Button> 
         </div>
       </div>
       <InfoToast resetStatus={setAddedStatus} snackOpen={addedStatus} snackVertical="top" snackHorizontal="center" message={`<b>${name}</b> added.`} />
-    </div>
+    </form>
   )
 }
 

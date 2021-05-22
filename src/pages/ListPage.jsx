@@ -31,9 +31,10 @@ const ListPage = () => {
   const [loading, setLoading] = useState(true);
   const [clicked, setClicked] = useState(false);
 
+
   useEffect(() => {
     var links = JSON.parse(localStorage.getItem('links'));
-    var sorted = links.sort(function(a, b) {
+    var sorted = (links || []).sort(function(a, b) {
       return b.voteTime - a.voteTime;
     })
     setLinks(sorted);
