@@ -1,1 +1,0 @@
-{"version":3,"sources":["webpack://src/App.css"],"names":[],"mappings":"AAAA,qCACI,+BAAkC,CAClC,sBACJ,CAEA,EACI,cACJ","file":"main.de0a8891.chunk.css","sourcesContent":[".MuiPaginationItem-page.Mui-selected{\n    background-color: white !important;\n    border: 0.5px solid black;\n}\n\nb {\n    font-size: 30px;\n}"]}
