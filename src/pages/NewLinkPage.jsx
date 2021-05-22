@@ -53,13 +53,13 @@ const NewLinkPage = () => {
   const handleAdd = () => {
     const oldLinks = JSON.parse(localStorage.getItem('links'));
     if(oldLinks){
-      localStorage.setItem('links', JSON.stringify([...oldLinks, {
+      localStorage.setItem('links', JSON.stringify([{
         id: oldLinks.length + 1,
         name,
         url,
         voteCount:0,
         voteTime: Date.now()
-      }]))
+      },...oldLinks]))
     } else {
       localStorage.setItem('links', JSON.stringify([{
         id: 1,

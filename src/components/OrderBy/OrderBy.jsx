@@ -1,73 +1,102 @@
-import React from 'react';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import InputBase from '@material-ui/core/InputBase';
-import { withStyles } from '@material-ui/core/styles';
+import React, {useState} from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import { Typography } from '@material-ui/core';
 
-
-const SelectInput = withStyles((theme) => ({
-  root: {
-    'label + &': {
-      marginTop: theme.spacing(3),
-    },
-  },
-  input: {
-    borderRadius: 4,
+const useStyles = makeStyles((theme) => ({
+  orderByContainer: {
     position: 'relative',
-    backgroundColor: '#ededed',
-    border: '1px solid #ced4da',
-    fontSize: 16,
-    padding: '10px 26px 10px 12px',
-    transition: theme.transitions.create(['border-color', 'box-shadow']),
-    // Use the system font instead of the default Roboto font.
-    fontFamily: [
-      '-apple-system',
-      'BlinkMacSystemFont',
-      '"Segoe UI"',
-      'Roboto',
-      '"Helvetica Neue"',
-      'Arial',
-      'sans-serif',
-      '"Apple Color Emoji"',
-      '"Segoe UI Emoji"',
-      '"Segoe UI Symbol"',
-    ].join(','),
-    '&:focus': {
-      borderRadius: 4,
-      borderColor: '#fff',
-      boxShadow: '0 0 0 0.2rem #fff',
-    },
+    margin: '20px 0 55px 0',
   },
-}))(InputBase);
+  absoluteContent: {
+    backgroundColor: '#ededed',
+    border: "1px solid #cfcfcf",
+    borderRadius: '3px',
+    position: 'absolute',
+    width: '50%',
+    '&:hover': {
+      cursor: 'pointer'
+    }
+  },
+  arrow: {
+    float: 'right',
+    borderLeft: '1px solid #cfcfcf',
+    padding: '4px'
+  },
+  menu: {
+    border: '1px solid #cfcfcf',
+    backgroundColor: '#ededed',
+  },
+  menuOption: {
+    padding: '5px 8px',
+    borderBottom: '1px solid #cfcfcf'
+  }
+}));
 
 
-export default function OrderBy() {
-  const [state, setState] = React.useState({
-    age: '',
-    name: 'hai',
-  });
+export default function OrderBy({ clicked, setClicked, setLinks }) {
+  const classes = useStyles();
+  const [hoverFirst, setHoverFirst] = useState(false);
+  const [hoverSec, setHoverSec] = useState(false);
+  const [menuText, setMenuText] = useState('Order By');
 
-  const handleChange = (event) => {
-    const name = event.target.name;
-    setState({
-      ...state,
-      [name]: event.target.value,
-    });
-  };
+  const handleSelect = () => {
+    setClicked(!clicked);
+  }
+
+  const handleOption = (e, v) => {
+    setMenuText(e.target.innerHTML);
+    var links = JSON.parse(localStorage.getItem('links'));
+
+    if(v === 1) {
+      let sorted = links.sort(function(a, b) {
+        return b.voteTime - a.voteTime;
+      }).sort(function(a, b) {
+        return b.voteCount - a.voteCount;
+      })
+
+      setLinks(sorted);
+    } else if(v === 2) {
+      let sorted = links.sort(function(a, b) {
+        return b.voteTime - a.voteTime;
+      }).sort(function(a, b) {
+        return a.voteCount - b.voteCount;
+      })
+
+      setLinks(sorted);
+    }
+  }
 
   return (
-    <div>
-      <FormControl variant="filled" hiddenLabel={true}>
-        <Select
-          native
-          value={state.age}
-          onChange={handleChange}
-          input={<SelectInput />}
-        >
-          <option style={{backgroundColor: '#ededed'}} value={10}>Most Voted (Z  &#x2192; A)</option>
-          <option style={{backgroundColor: '#ededed'}} value={20}>Less Voted (A  &#x2192; Z)</option>
-        </Select>
-      </FormControl>
+    <div className={classes.orderByContainer} onClick={handleSelect}>
+      <div className={classes.absoluteContent}>
+        <div> 
+          <Typography style={{display: 'inline-block', padding: '4px 8px'}}>
+            {menuText}
+          </Typography>
+          <ArrowDropDownIcon className={classes.arrow}/>
+        </div>
+        <div className={classes.menu} style={clicked ? {display: 'block'} : {display: 'none'}}>
+          <Typography
+            className={classes.menuOption}
+            onMouseEnter={() => setHoverFirst(true)}
+            onMouseLeave={() => setHoverFirst(false)}
+            onClick={(e) => handleOption(e, 1)}
+            style={hoverFirst ? {backgroundColor: '#cfcfcf'} : {}}
+          >
+            Most Voted (Z &#8594; A)
+          </Typography>
+          <Typography
+            className={classes.menuOption}
+            onClick={(e) => handleOption(e, 2)}
+            onMouseEnter={() => setHoverSec(true)}
+            onMouseLeave={() => setHoverSec(false)}
+            style={hoverSec ? {backgroundColor: '#cfcfcf'} : {}}
+          >
+            Less Voted (A &#8594; Z)
+          </Typography>
+        </div>
+      </div>
     </div>
   );
 }

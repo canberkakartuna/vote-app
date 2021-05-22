@@ -57,6 +57,16 @@ export default function LinkCard({ id, name, voteCount, url, setLinks, setDelete
   const [open, setOpen] = useState(false);
   const [trackVote, setTrackVote] = useState(voteCount);
 
+  const handleSortVote = (links) => {
+    var sorted = links.sort(function(a, b) {
+      return b.voteTime - a.voteTime;
+    }).sort(function(a, b) {
+      return b.voteCount - a.voteCount;
+    })
+
+    return sorted
+  }
+
   
   const handleVote = (vote) => {
     var links = JSON.parse(localStorage.getItem('links'));
@@ -64,13 +74,17 @@ export default function LinkCard({ id, name, voteCount, url, setLinks, setDelete
     var foundIndex = links.findIndex(link => link.id === id);
     
     links[foundIndex].voteCount += vote;
-
-    console.log(links[foundIndex], links[foundIndex].voteCount);
+    links[foundIndex].voteTime = Date.now();
 
     setTrackVote(trackVote + vote);
 
-    localStorage.setItem('links', JSON.stringify(links));
+    var sortedLinks = handleSortVote(links)
+
+    setLinks(sortedLinks)
+
+    localStorage.setItem('links', JSON.stringify(sortedLinks));
   }
+
 
   return (
     <Card className={classes.root} style={hover ? {backgroundColor: '#efefef'} : {}} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import AddLink from '../components/AddLink/AddLink';
 import Divider from '@material-ui/core/Divider';
 import OrderBy from '../components/OrderBy/OrderBy';
@@ -7,6 +7,7 @@ import LinkCard from '../components/LinkCard/LinkCard';
 import Pagination from '@material-ui/lab/Pagination';
 import { Typography } from '@material-ui/core';
 import InfoToast from '../components/InfoToast/InfoToast';
+import OutsideAlerter from '../custom-hooks/OutsideAlerter';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -26,43 +27,82 @@ const ListPage = () => {
   const [deleteStatus, setDeleteStatus] = useState(false);
   const [links, setLinks] = useState();
   const [deletedName, setDeletedName] = useState();
+  const [currentLinks, setCurrentLinks] = useState();
+  const [loading, setLoading] = useState(true);
+  const [clicked, setClicked] = useState(false);
 
   useEffect(() => {
-    setLinks(JSON.parse(localStorage.getItem('links')));
+    var links = JSON.parse(localStorage.getItem('links'));
+    var sorted = links.sort(function(a, b) {
+      return b.voteTime - a.voteTime;
+    })
+    setLinks(sorted);
   }, [])
 
-  const indexOfLastLink = page * 5;
-  const indexOfFirstLink = indexOfLastLink - 5;
-  const currentLinks = (links || []).slice(indexOfFirstLink, indexOfLastLink);
+  useLayoutEffect(() => {
+    const indexOfLastLink = page * 5;
+    const indexOfFirstLink = indexOfLastLink - 5;
+    setCurrentLinks((links || []).slice(indexOfFirstLink, indexOfLastLink));
+    setLoading(false);
+  }, [links, page])
 
-  return(
-    <div className={classes.container}>
-      <AddLink/>
-      <Divider style={{margin: '20px 0'}}/>
+  
+  if(!loading){
+    if ((links && links.length === 0) || (!links) ){
+      return (
+        <div className={classes.container}>
+          <AddLink/>
+          <Typography style={{textAlign: 'center', marginTop: '20px'}}>No Link</Typography>
+        </div>
+      )
+    } else {
+      return(
+        <div className={classes.container}>
+          <AddLink/>
 
-      {(links && links.length !== 0) ? <OrderBy /> : null}
+          <Divider style={{marginTop: '20px'}}/>
+    
+          {(links && links.length !== 0) ? (
+            <OutsideAlerter visibility={clicked} setVisibility={setClicked}>
+              <OrderBy clicked={clicked} setClicked={setClicked} setLinks={setLinks} /> 
+            </OutsideAlerter>
+          )
+          : null}
+    
+          {(currentLinks || []).map(({id, ...otherProps}) => (
+            <div key={id}>
+              <LinkCard
+                id={id}
+                {...otherProps}
+                setLinks={setLinks}
+                setDeleteStatus={setDeleteStatus}
+                setDeletedName={setDeletedName}
+              />
+            </div>
+          ))}
 
-      {(currentLinks || []).map(({id, ...otherProps}) => {
-        return(
-          <div key={id}>
-            <LinkCard id={id} {...otherProps} setLinks={setLinks} setDeleteStatus={setDeleteStatus} setDeletedName={setDeletedName} />
-          </div>
-        )
-      })}
+          <Pagination 
+            page={page}
+            onChange={(e, p) => setPage(p)} style={{margin: 'auto'}}
+            count={Math.ceil(links.length / 5)}
+            shape="rounded"
+          />
 
-      {(links && links.length === 0) || (!links) ? (
-          <Typography style={{textAlign: 'center'}}>No Link</Typography>
-        ) : null}
-
-      {(links && links.length !== 0) ?  (
-        <Pagination 
-          page={page}
-          onChange={(e, p) => setPage(p)} style={{margin: 'auto'}}
-          count={Math.ceil(JSON.parse(localStorage.getItem('links')).length / 5)}
-          shape="rounded" />) : null}
-      <InfoToast resetStatus={setDeleteStatus} snackOpen={deleteStatus} snackVertical="top" snackHorizontal="center" message={`<b>${deletedName}</b> removed.`} />
-    </div>
-  )
+          <InfoToast
+            resetStatus={setDeleteStatus}
+            snackOpen={deleteStatus}
+            snackVertical="top"
+            snackHorizontal="center"
+            message={`<b>${deletedName}</b> removed.`}
+          />
+        </div>
+      )
+    }
+  } else {
+    return(
+      null
+    )
+  }
 }
 
 export default ListPage;
