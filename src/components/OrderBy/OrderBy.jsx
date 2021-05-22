@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
     border: "1px solid #cfcfcf",
     borderRadius: '3px',
     position: 'absolute',
-    width: '50%',
+    width: '60%',
     '&:hover': {
       cursor: 'pointer'
     }
