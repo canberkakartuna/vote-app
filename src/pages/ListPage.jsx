@@ -54,6 +54,13 @@ const ListPage = () => {
         <div className={classes.container}>
           <AddLink/>
           <Typography style={{textAlign: 'center', marginTop: '20px'}}>No Link</Typography>
+          <InfoToast
+            resetStatus={setDeleteStatus}
+            snackOpen={deleteStatus}
+            snackVertical="top"
+            snackHorizontal="center"
+            message={`<b>${deletedName}</b> removed.`}
+          />
         </div>
       )
     } else {
