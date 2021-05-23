@@ -2,6 +2,11 @@ import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import { Typography } from '@material-ui/core';
+import { isWidthUp } from '@material-ui/core/withWidth';
+import {
+  withWidth
+} from '@material-ui/core';
+
 
 const useStyles = makeStyles((theme) => ({
   orderByContainer: {
@@ -13,7 +18,6 @@ const useStyles = makeStyles((theme) => ({
     border: "1px solid #cfcfcf",
     borderRadius: '3px',
     position: 'absolute',
-    width: '60%',
     '&:hover': {
       cursor: 'pointer'
     }
@@ -34,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function OrderBy({ clicked, setClicked, setLinks }) {
+function OrderBy({ width, clicked, setClicked, setLinks }) {
   const classes = useStyles();
   const [hoverFirst, setHoverFirst] = useState(false);
   const [hoverSec, setHoverSec] = useState(false);
@@ -69,7 +73,7 @@ export default function OrderBy({ clicked, setClicked, setLinks }) {
 
   return (
     <div className={classes.orderByContainer} onClick={handleSelect}>
-      <div className={classes.absoluteContent}>
+      <div className={classes.absoluteContent} style={{ width: isWidthUp('md', width) ? '50%' : '60%'}}>
         <div> 
           <Typography style={{display: 'inline-block', padding: '4px 8px'}}>
             {menuText}
@@ -100,3 +104,5 @@ export default function OrderBy({ clicked, setClicked, setLinks }) {
     </div>
   );
 }
+
+export default withWidth()(OrderBy);

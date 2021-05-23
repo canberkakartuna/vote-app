@@ -10,7 +10,7 @@ import {
 import './App.css';
 import {ReactComponent as ReactLogo} from './logo.svg';
 import {
-  Switch,
+  HashRouter,
   Route,
   Redirect
 } from "react-router-dom";
@@ -37,7 +37,7 @@ function App({ width }) {
           <Typography><strong>Link</strong>VOTE Challenge</Typography>
         </div>
         <Divider style={{marginBottom: '25px'}} />
-        <Switch>
+        <HashRouter>
           <Route exact path="/vote-app">
             <ListPage/>
           </Route>
@@ -47,7 +47,7 @@ function App({ width }) {
           <Route path="*">
             <Redirect to="/vote-app"/>
           </Route>
-          </Switch>
+        </HashRouter>
       </Container>
     </ThemeProvider>
   );

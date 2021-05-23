@@ -50,6 +50,13 @@ function isUrlValid(userInput) {
   return url.test(userInput);
 }
 
+function addhttp(url) {
+  if (!/^(?:f|ht)tps?:\/\//.test(url)) {
+    url = "https://" + url;
+  }
+  return url;
+}
+
 const NewLinkPage = () => {
   const classes = useStyles();
   const [name, setName] = useState('');
@@ -61,11 +68,12 @@ const NewLinkPage = () => {
     setSubmited(true);
     if(name !== '' && (url !== '' && isUrlValid(url))) {
       const oldLinks = JSON.parse(localStorage.getItem('links'));
+      let httpsName = addhttp(url);
       if(oldLinks){
         localStorage.setItem('links', JSON.stringify([{
           id: oldLinks.length + 1,
           name,
-          url,
+          url: httpsName,
           voteCount:0,
           voteTime: Date.now()
         },...oldLinks]))
@@ -73,7 +81,7 @@ const NewLinkPage = () => {
         localStorage.setItem('links', JSON.stringify([{
           id: 1,
           name,
-          url,
+          url: httpsName,
           voteCount: 0,
           voteTime: Date.now()
         }]))
